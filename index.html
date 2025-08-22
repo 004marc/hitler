@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wall AR Video</title>
+  <!-- A-Frame + AR.js -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+
+<body style="margin:0; overflow:hidden;">
+
+  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    
+    <!-- Video asset -->
+    <a-assets>
+      <video id="myVideo" 
+             src="video.mp4" 
+             autoplay loop muted playsinline crossorigin="anonymous">
+      </video>
+    </a-assets>
+
+    <!-- Marker -->
+    <a-marker type="pattern" url="wall-object-marker.patt">
+      <a-video 
+        src="#myVideo" 
+        width="2" 
+        height="2" 
+        position="0 0 0"
+        rotation="-90 0 0">
+      </a-video>
+    </a-marker>
+
+    <!-- Camera -->
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <!-- Play/Pause Video when Marker is Detected -->
+  <script>
+    const marker = document.querySelector("a-marker");
+    const video = document.querySelector("#myVideo");
+
+    marker.addEventListener("markerFound", () => {
+      video.play().catch(err => console.log("Video play error:", err));
+    });
+
+    marker.addEventListener("markerLost", () => video.pause());
+  </script>
+
+</body>
+</html>
